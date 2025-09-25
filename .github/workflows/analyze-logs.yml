@@ -1,0 +1,43 @@
+name: Splunk Log Analyzer
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"  # run hourly
+
+jobs:
+  analyze-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch logs
+        run: python scripts/fetch_logs.py
+        env:
+          USE_FAKE_LOGS: "1"
+          SPLUNK_URL: ${{ secrets.SPLUNK_URL }}
+          SPLUNK_USER: ${{ secrets.SPLUNK_USER }}
+          SPLUNK_PASS: ${{ secrets.SPLUNK_PASS }}
+
+      - name: Quantum anomaly detection
+        run: python scripts/quantum_detect.py
+
+      - name: GenAI summary
+        run: python scripts/genai_summary.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: log-report
+          path: output/report.md
