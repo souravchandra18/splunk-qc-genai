@@ -29,7 +29,7 @@ jobs:
           SPLUNK_PASS: ${{ secrets.SPLUNK_PASS }}
 
       - name: Quantum anomaly detection
-        run: python scripts/quantum_detect.py
+        run: python scripts/quantam_detect.py
 
       - name: GenAI summary
         run: python scripts/genai_summary.py
