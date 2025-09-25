@@ -1,5 +1,5 @@
 import pandas as pd, json
-from qiskit import Aer
+from qiskit_aer import AerSimulator
 from qiskit.utils import QuantumInstance
 from qiskit.algorithms import QAOA
 from qiskit_optimization import QuadraticProgram
@@ -17,7 +17,7 @@ for i in range(len(logs)):
 
 qp.minimize(linear=[1]*len(logs))
 
-backend = Aer.get_backend("qasm_simulator")
+backend = AerSimulator()
 qaoa = QAOA(quantum_instance=QuantumInstance(backend))
 result = qaoa.compute_minimum_eigenvalue(qp.to_ising()[0])
 
