@@ -1,0 +1,6 @@
+requests
+pandas
+qiskit
+openai
+python-dateutil
+faker
