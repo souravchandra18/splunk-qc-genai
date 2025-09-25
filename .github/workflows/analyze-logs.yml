@@ -3,7 +3,7 @@ name: Splunk Log Analyzer
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"  # run hourly
+    - cron: "0 * * * *"  # every hour
 
 jobs:
   analyze-logs:
@@ -12,30 +12,27 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
+      - name: Set up Python virtual environment
         run: |
-          pip uninstall -y qiskit qiskit-terra qiskit-aer qiskit-optimization
-          pip install --upgrade pip
+          python -m venv venv
+          source venv/bin/activate
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Fetch logs
-        run: python scripts/fetch_logs.py
-        env:
-          USE_FAKE_LOGS: "1"
-          SPLUNK_URL: ${{ secrets.SPLUNK_URL }}
-          SPLUNK_USER: ${{ secrets.SPLUNK_USER }}
-          SPLUNK_PASS: ${{ secrets.SPLUNK_PASS }}
+        run: |
+          source venv/bin/activate
+          python scripts/fetch_logs.py
 
       - name: Quantum anomaly detection
-        run: python scripts/quantam_detect.py
+        run: |
+          source venv/bin/activate
+          python scripts/quantum_detect.py
 
       - name: GenAI summary
-        run: python scripts/genai_summary.py
+        run: |
+          source venv/bin/activate
+          python scripts/genai_summary.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
