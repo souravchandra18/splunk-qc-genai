@@ -27,7 +27,9 @@ jobs:
       - name: Quantum anomaly detection
         run: |
           source venv/bin/activate
-          python scripts/quantum_detect.py
+          python scripts/quantam_detect.py
+        env:
+          USE_FAKE_LOGS: 1
 
       - name: GenAI summary
         run: |
