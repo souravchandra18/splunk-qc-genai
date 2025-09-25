@@ -6,4 +6,3 @@ requests
 openai
 faker
 python-dateutil
-qiskit
