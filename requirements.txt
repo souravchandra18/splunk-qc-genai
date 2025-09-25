@@ -1,6 +1,8 @@
 requests
 pandas
 qiskit
+qiskit-aer
+qiskit-optimization
 openai
 python-dateutil
 faker
