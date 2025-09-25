@@ -1,6 +1,6 @@
 import pandas as pd, json
 from qiskit_aer import AerSimulator
-from qiskit.utils import QuantumInstance
+from qiskit_utils import QuantumInstance
 from qiskit.algorithms import QAOA
 from qiskit_optimization import QuadraticProgram
 
