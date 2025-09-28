@@ -8,8 +8,6 @@ from qiskit import transpile
 logs = pd.read_json("output/logs.json")
 
 # --- Example Quantum Processing ---
-# Instead of QuantumInstance, we just run directly on AerSimulator
-
 # Create a toy quantum circuit
 qc = random_circuit(4, 3, max_operands=3)
 
@@ -20,9 +18,11 @@ sim = AerSimulator()
 compiled = transpile(qc, sim)
 result = sim.run(compiled).result()
 
+# ✅ FIX: must pass circuit (compiled or qc) to get_counts in Qiskit 1.x
+counts = result.get_counts(compiled)
+
 # Fake anomaly score (toy example: based on ERROR logs count + quantum random outcome)
 error_count = (logs["level"] == "ERROR").sum()
-counts = result.get_counts()
 anomaly_score = error_count + (len(counts) % 5)
 
 output = {
