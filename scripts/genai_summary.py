@@ -1,31 +1,36 @@
+import os
 import json
 import openai
-import os
 
+# Set API key
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
+# Load logs and quantum results
 with open("output/logs.json") as f:
     logs = json.load(f)
 
 with open("output/quantum_results.json") as f:
     quantum = json.load(f)
 
-prompt = f"""
+# Prepare the prompt
+prompt_text = f"""
 Analyze these logs: {logs[:50]}
 Quantum findings: {quantum}
 Summarize anomalies and root causes.
 """
 
-# ✅ Legacy Completion API for openai==0.28.0
-response = openai.Completion.create(
-    engine="text-davinci-003",  # or "gpt-4o", if available
-    prompt=prompt,
-    max_tokens=300,
-    temperature=0.2
+# ✅ New ChatCompletion API
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",  # or gpt-4, gpt-3.5-turbo
+    messages=[{"role": "user", "content": prompt_text}],
+    temperature=0.2,
+    max_tokens=300
 )
 
-summary_text = response["choices"][0]["text"]
+# Extract text
+summary_text = response.choices[0].message.content
 
+# Save report
 with open("output/report.md", "w") as f:
     f.write(summary_text)
 
