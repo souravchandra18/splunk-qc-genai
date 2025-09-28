@@ -1,6 +1,6 @@
 import openai, json, time, os
 from textwrap import dedent
-from openai.error import RateLimitError
+from openai import RateLimitError
 
 # ---------------------------
 # Helper: Safe GPT call with retries
