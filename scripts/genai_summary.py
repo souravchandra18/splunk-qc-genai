@@ -1,33 +1,31 @@
-import openai, json, os
+import openai
+import json
 
-LOG_FILE = "output/logs.json"
-QC_FILE = "output/quantum_results.json"
-OUTPUT_FILE = "output/report.md"
+openai.api_key = "OPENAI_API_KEY"
 
-with open(LOG_FILE) as f:
+with open("output/logs.json") as f:
     logs = json.load(f)
 
-with open(QC_FILE) as f:
+with open("output/quantum_results.json") as f:
     quantum = json.load(f)
 
-openai.api_key = os.environ.get("OPENAI_API_KEY")
-
 prompt = f"""
-Analyze these logs (first 5000 entries for brevity):
-{logs[:5000]}
-Quantum findings:
-{quantum}
-Summarize anomalies, provide root cause analysis, and suggest recommended fixes.
+Analyze these logs: {logs[:50]}
+Quantum findings: {quantum}
+Summarize anomalies and root causes.
 """
 
-summary = openai.Completion.create(
+# ✅ New OpenAI 1.x API
+response = openai.chat.completions.create(
     model="gpt-4o-mini",
-    prompt=prompt,
-    max_tokens=500
+    messages=[{"role": "user", "content": prompt}],
+    temperature=0.2,
+    max_tokens=300
 )
 
-os.makedirs("output", exist_ok=True)
-with open(OUTPUT_FILE,"w") as f:
-    f.write(summary["choices"][0]["text"])
+summary_text = response.choices[0].message.content
 
-print(f"RCA summary saved to {OUTPUT_FILE}")
+with open("output/report.md", "w") as f:
+    f.write(summary_text)
+
+print("GenAI summary done → output/report.md")
