@@ -1,7 +1,8 @@
-import openai
+import os
 import json
+import openai
 
-openai.api_key = "OPENAI_API_KEY"
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 with open("output/logs.json") as f:
     logs = json.load(f)
@@ -15,7 +16,6 @@ Quantum findings: {quantum}
 Summarize anomalies and root causes.
 """
 
-# ✅ New OpenAI 1.x API
 response = openai.chat.completions.create(
     model="gpt-4o-mini",
     messages=[{"role": "user", "content": prompt}],
