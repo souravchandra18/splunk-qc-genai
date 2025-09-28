@@ -18,8 +18,8 @@ sim = AerSimulator()
 compiled = transpile(qc, sim)
 result = sim.run(compiled).result()
 
-# ✅ FIX: must pass circuit (compiled or qc) to get_counts in Qiskit 1.x
-counts = result.get_counts(compiled)
+# ✅ Fix: Use the circuit's name, not the object itself
+counts = result.get_counts(qc.name)
 
 # Fake anomaly score (toy example: based on ERROR logs count + quantum random outcome)
 error_count = (logs["level"] == "ERROR").sum()
