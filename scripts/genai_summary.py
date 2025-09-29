@@ -14,7 +14,7 @@ with open("output/quantum_results.json") as f:
 
 # Prepare the prompt
 prompt_text = f"""
-Analyze these logs: {logs[:100]}
+Analyze these logs: {logs[:300]}
 Quantum findings: {quantum}
 Summarize anomalies and root causes.
 """
